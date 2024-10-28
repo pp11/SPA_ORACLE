@@ -9,7 +9,7 @@ public class SpaAppsApplication {
 	public static void main(String[] args) {
 
         SpringApplication.run(SpaAppsApplication.class, args);
-        System.out.println("running");
+        System.out.println("the application is running");
 
 	}
 
