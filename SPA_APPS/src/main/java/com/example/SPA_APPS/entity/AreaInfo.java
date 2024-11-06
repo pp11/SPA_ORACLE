@@ -6,25 +6,25 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "division_info", uniqueConstraints = @UniqueConstraint(columnNames = {"divisionCode"}))
+@Table(name = "area_info", uniqueConstraints = @UniqueConstraint(columnNames = {"areaCode"}))
 @Data
-public class DivisionInfo {
+public class AreaInfo {
     @Id
     @SequenceGenerator(
-            name = "division_sequence",
-            sequenceName = "division_sequence",
+            name = "area_sequence",
+            sequenceName = "area_sequence",
             initialValue = 1,
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "division_sequence"
+            generator = "area_sequence"
     )
     @Column(updatable = false)
     private Long id;
 
-    private String divisionCode;
-    private String divisionName;
+    private String areaCode;
+    private String areaName;
     private String status;
     private String createBy;
     private String createTerminal;
