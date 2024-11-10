@@ -16,13 +16,13 @@ public class DivisionController {
             }
 
     @PostMapping("/saveDivision")
-    public ResponseEntity<BaseResponse> saveTarget(@RequestBody DivisionInfoModel divisionInfoModel) {
+    public ResponseEntity<BaseResponse> saveDivision(@RequestBody DivisionInfoModel divisionInfoModel) {
         BaseResponse baseResponse = divisionInfoService.saveDivisionInfo(divisionInfoModel);
         return ResponseEntity.ok(baseResponse);
     }
 
     @PostMapping("/updateDivision")
-    public ResponseEntity<BaseResponse> updateTarget(@RequestBody DivisionInfoModel divisionInfoModel) {
+    public ResponseEntity<BaseResponse> updateDivision(@RequestBody DivisionInfoModel divisionInfoModel) {
         BaseResponse baseResponse = divisionInfoService.updateDivisionInfo(divisionInfoModel);
         return ResponseEntity.ok(baseResponse);
     }
