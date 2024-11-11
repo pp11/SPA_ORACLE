@@ -18,4 +18,6 @@ public class PriorityProdMstModel {
     private LocalDateTime updateDate;
     private String updateBy;
     private String updateTerminal;
+
+    private List<PriorityProdDtlModel> dtlModels;
 }

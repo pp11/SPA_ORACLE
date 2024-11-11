@@ -3,6 +3,7 @@ package com.example.SPA_APPS.repository;
 import com.example.SPA_APPS.model.PriorityProdDtlModel;
 import com.example.SPA_APPS.model.PriorityProdMstModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
@@ -54,67 +55,102 @@ public class PriorityProdRepository {
 
         return dtlModel; // Return the saved detail model
     }
-/*
-    public PriorityProdMstModel savePriorityProdMst(PriorityProdMstModel mstModel) {
-        // Get next value from the sequence for PRIO_PRO_MST_SLNO
-        String sql = "SELECT PRIO_PROD_MST_SEQ.NEXTVAL FROM DUAL";
-        Long mstSlno = jdbcTemplate.queryForObject(sql, Long.class);
 
-        // Insert into PRIORITY_PROD_MST table with the generated mstSlno
-        String insertSql = "INSERT INTO PRIORITY_PROD_MST (MST_ID, EFFECT_START_DATE, EFFECT_END_DATE, REMARKS) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(insertSql, mstSlno, mstModel.getEffectStartDate(), mstModel.getEffectEndDate(), mstModel.getRemarks());
 
-        // Set the generated mstSlno in the model and return it
-        mstModel.setMstId(mstSlno);
+
+    public PriorityProdMstModel searchByMstId(Long mstId) {
+        // Query to fetch master record based on mstId
+        String masterSql = "SELECT * FROM PRIORITY_PROD_MST mst WHERE mst.MST_ID = ?";
+
+        // Get the master record (assuming there is only one result for the mstId)
+        PriorityProdMstModel mstModel = jdbcTemplate.queryForObject(masterSql, new Object[]{mstId}, new RowMapper<PriorityProdMstModel>() {
+            @Override
+            public PriorityProdMstModel mapRow(ResultSet rs, int rowNum) throws SQLException {
+                PriorityProdMstModel mst = new PriorityProdMstModel();
+                mst.setMstId(rs.getLong("MST_ID"));
+                mst.setEffectStartDate(rs.getDate("EFFECT_START_DATE"));
+                mst.setEffectEndDate(rs.getDate("EFFECT_END_DATE"));
+                mst.setRemarks(rs.getString("REMARKS"));
+                return mst;
+            }
+        });
+
+        // Query to fetch details for the given mstId
+        String detailSql = "SELECT * FROM PRIORITY_PROD_DTL dtl WHERE dtl.MST_ID = ?";
+        List<PriorityProdDtlModel> dtlModels = jdbcTemplate.query(detailSql, new Object[]{mstId}, new RowMapper<PriorityProdDtlModel>() {
+            @Override
+            public PriorityProdDtlModel mapRow(ResultSet rs, int rowNum) throws SQLException {
+                PriorityProdDtlModel dtl = new PriorityProdDtlModel();
+                dtl.setDtlId(rs.getLong("DTL_ID"));
+                dtl.setMstId(rs.getLong("MST_ID"));
+                dtl.setProductCode(rs.getString("PRODUCT_CODE"));
+                dtl.setStatus(rs.getString("STATUS"));
+                dtl.setRemarks(rs.getString("REMARKS"));
+                return dtl;
+            }
+        });
+
+        // Set the details in the master model
+        if (mstModel != null) {
+            mstModel.setDetails(dtlModels); // Attach all found detail records to the master record
+        }
+
         return mstModel;
     }
 
+    public PriorityProdMstModel updatePriorityProdMst(PriorityProdMstModel mstModel) {
+        try {
+            // Update master record
+            String sql = "UPDATE PRIORITY_PROD_MST SET " +
+//                    "EFFECT_START_DATE = ?, " +
+//                    "EFFECT_END_DATE = ?, " +
+                    "REMARKS = ?, " +
+                    "UPDATE_BY = ?, " +
+                    "UPDATE_TERMINAL = ?, " +
+                    "UPDATE_DATE = ? " +
+                    "WHERE MST_ID = ?";
 
-    public PriorityProdDtlModel savePriorityProdDtl(PriorityProdDtlModel dtlModel) {
-        String dtlgenerateSql = "SELECT PRIO_PROD_DTL_SEQ.NEXTVAL FROM DUAL";
-        Long dtlSlno = jdbcTemplate.queryForObject(dtlgenerateSql, Long.class);
+            jdbcTemplate.update(sql,
+//                    mstModel.getEffectStartDate(),
+//                    mstModel.getEffectEndDate(),
+                    mstModel.getRemarks(),
+                    mstModel.getUpdateBy(),
+                    mstModel.getUpdateTerminal(),
+                    mstModel.getUpdateDate(),
+                    mstModel.getMstId());
+            return mstModel;
+        } catch (DataAccessException e) {
 
-        String sql = "INSERT INTO PRIORITY_PROD_DTL (DTL_ID, MST_ID, PRODUCT_CODE, STATUS, REMARKS) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, dtlSlno,dtlModel.getMstId(), dtlModel.getProductCode(), dtlModel.getStatus(), dtlModel.getRemarks());
-        return dtlModel;
-    }
-
-
-    public PriorityProdMstModel findPriorityProdMstById(Long mstId) {
-        String sql = "SELECT * FROM PRIORITY_PROD_MST WHERE MST_ID = ?";
-        return jdbcTemplate.queryForObject(sql, new PriorityProdMstRowMapper(), mstId);
-    }
-
-
-    public List<PriorityProdDtlModel> findPriorityProdDtlsByMstId(Long mstId) {
-        String sql = "SELECT * FROM PRIORITY_PROD_DTL WHERE MST_ID = ?";
-        return jdbcTemplate.query(sql, new PriorityProdDtlRowMapper(), mstId);
-    }
-
-    // RowMapper for PriorityProdMstModel
-    private static class PriorityProdMstRowMapper implements RowMapper<PriorityProdMstModel> {
-        @Override
-        public PriorityProdMstModel mapRow(ResultSet rs, int rowNum) throws SQLException {
-            PriorityProdMstModel model = new PriorityProdMstModel();
-            model.setMstId(rs.getLong("MST_ID"));
-            model.setEffectStartDate(rs.getDate("EFFECT_START_DATE"));
-            model.setEffectEndDate(rs.getDate("EFFECT_END_DATE"));
-            model.setRemarks(rs.getString("REMARKS"));
-            return model;
+            throw new RuntimeException("Error updating PriorityProdMst", e);
         }
     }
 
-    // RowMapper for PriorityProdDtlModel
-    private static class PriorityProdDtlRowMapper implements RowMapper<PriorityProdDtlModel> {
-        @Override
-        public PriorityProdDtlModel mapRow(ResultSet rs, int rowNum) throws SQLException {
-            PriorityProdDtlModel model = new PriorityProdDtlModel();
-            model.setDtlId(rs.getLong("DTL_ID"));
-            model.setMstId(rs.getLong("MST_ID"));
-            model.setProductCode(rs.getString("PRODUCT_CODE"));
-            model.setStatus(rs.getString("STATUS"));
-            model.setRemarks(rs.getString("REMARKS"));
-            return model;
+
+    public PriorityProdDtlModel updatePriorityProdDtl(PriorityProdDtlModel dtlModel) {
+        try {
+            // Update detail record
+            String sql = "UPDATE PRIORITY_PROD_DTL SET " +
+//                    "PRODUCT_CODE = ?, " +
+                    "STATUS = ?, " +
+                    "REMARKS = ?, " +
+                    "UPDATE_BY = ?, " +
+                    "UPDATE_TERMINAL = ?, " +
+                    "UPDATE_DATE = ? " +
+                    "WHERE DTL_ID = ?";
+
+            jdbcTemplate.update(sql,
+                    //dtlModel.getProductCode(),
+                    dtlModel.getStatus(),
+                    dtlModel.getRemarks(),
+                    dtlModel.getUpdateBy(),
+                    dtlModel.getUpdateTerminal(),
+                    dtlModel.getUpdateDate(),
+                    dtlModel.getDtlId());
+
+            return dtlModel;
+        } catch (DataAccessException e) {
+            throw new RuntimeException("Error updating PriorityProdDtl", e);
         }
-    }*/
+    }
+
 }

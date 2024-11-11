@@ -3,6 +3,7 @@ package com.example.SPA_APPS.utils;
 import com.example.SPA_APPS.dto.AreaInfoDto;
 import com.example.SPA_APPS.dto.DivisionInfoDto;
 import com.example.SPA_APPS.model.AreaInfoModel;
+import com.example.SPA_APPS.model.PriorityProdMstModel;
 import com.example.SPA_APPS.model.RegionInfoModel;
 import lombok.Data;
 
@@ -18,6 +19,8 @@ public class BaseResponse {
     private  List<AreaInfoDto> areaInfoDtos;
 
     private List<RegionInfoModel> regionInfoModelList;
+
+    private PriorityProdMstModel priorityProdMstModel;
 
 
 

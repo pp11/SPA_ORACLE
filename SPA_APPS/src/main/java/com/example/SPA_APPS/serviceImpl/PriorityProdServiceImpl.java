@@ -53,4 +53,42 @@ public class PriorityProdServiceImpl implements PriorityProdService {
         return baseResponse;
 
     }
+
+    @Override
+    public BaseResponse searchPrioProdByMstId(Long id) {
+
+        BaseResponse baseResponse=new BaseResponse();
+
+        PriorityProdMstModel mstModel=priorityProdRepository.searchByMstId(id);
+        baseResponse.setPriorityProdMstModel(mstModel);
+
+        return  baseResponse;
+
+    }
+
+    @Override
+    public BaseResponse updatePriorityProd(PriorityProdMstModel mstModel, List<PriorityProdDtlModel> dtlModels) {
+        mstModel.setUpdateDate(LocalDateTime.now());
+        mstModel.setUpdateTerminal(IpAddressUtils.getLocalIpAddress());
+
+        BaseResponse baseResponse = new BaseResponse();
+        PriorityProdMstModel updatedMstModel = priorityProdRepository.updatePriorityProdMst(mstModel);
+
+        if (updatedMstModel != null) {
+
+            for (PriorityProdDtlModel dtlModel : dtlModels) {
+                dtlModel.setMstId(updatedMstModel.getMstId());
+                dtlModel.setUpdateDate(LocalDateTime.now());
+                dtlModel.setUpdateTerminal(IpAddressUtils.getLocalIpAddress());
+
+                priorityProdRepository.updatePriorityProdDtl(dtlModel);
+            }
+
+            baseResponse.setMessage("Data updated successfully");
+        } else {
+            throw new RuntimeException("Failed to update the master record.");
+        }
+
+        return baseResponse;
+    }
 }

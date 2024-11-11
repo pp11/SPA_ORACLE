@@ -9,4 +9,8 @@ import java.util.List;
 public interface PriorityProdService {
     public BaseResponse savePriorityProd(PriorityProdMstModel mstModel, List<PriorityProdDtlModel> dtlModels);
 
+    public BaseResponse searchPrioProdByMstId(Long id);
+
+    public BaseResponse updatePriorityProd(PriorityProdMstModel mstModel, List<PriorityProdDtlModel> dtlModels);
+
 }
