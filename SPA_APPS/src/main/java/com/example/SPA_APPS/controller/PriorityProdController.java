@@ -45,7 +45,7 @@ public class PriorityProdController {
         }
     }
 
-    @PostMapping("/searchPriorityProd")
+    @GetMapping("/searchPriorityProd")
     public ResponseEntity<BaseResponse> searchPriorityProd(@RequestParam Long id)
     {
         try {

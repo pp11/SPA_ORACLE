@@ -31,6 +31,10 @@ public class PriorityProdServiceImpl implements PriorityProdService {
 
         mstModel.setCreateDate(LocalDateTime.now());
         mstModel.setCreateTerminal(IpAddressUtils.getLocalIpAddress());
+
+
+
+
         PriorityProdMstModel savedMstModel = priorityProdRepository.savePriorityProdMst(mstModel);
 
         BaseResponse baseResponse=new BaseResponse();
@@ -91,4 +95,9 @@ public class PriorityProdServiceImpl implements PriorityProdService {
 
         return baseResponse;
     }
+
+
+
+
+
 }

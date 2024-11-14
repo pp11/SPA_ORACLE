@@ -2,6 +2,7 @@ package com.example.SPA_APPS.repository;
 
 import com.example.SPA_APPS.model.PriorityProdDtlModel;
 import com.example.SPA_APPS.model.PriorityProdMstModel;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,12 +14,13 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 public class PriorityProdRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    public PriorityProdRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+//    public PriorityProdRepository(JdbcTemplate jdbcTemplate) {
+//        this.jdbcTemplate = jdbcTemplate;
+//    }
 
     public PriorityProdMstModel savePriorityProdMst(PriorityProdMstModel mstModel) {
         String sql = "INSERT INTO PRIORITY_PROD_MST (MST_ID, EFFECT_START_DATE, EFFECT_END_DATE, REMARKS,UPDATE_BY, UPDATE_TERMINAL, UPDATE_DATE) " +

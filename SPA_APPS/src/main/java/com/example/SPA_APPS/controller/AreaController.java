@@ -6,10 +6,7 @@ import com.example.SPA_APPS.service.AreaInfoService;
 import com.example.SPA_APPS.service.DivisionInfoService;
 import com.example.SPA_APPS.utils.BaseResponse;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/spa/api/v1/master")
@@ -31,13 +28,13 @@ public class AreaController {
         return ResponseEntity.ok(baseResponse);
     }
 
-    @PostMapping("/searchArea")
+    @GetMapping("/searchArea")
     public ResponseEntity<BaseResponse> searchArea(){
         BaseResponse baseResponse = areaInfoService.findAllAreaInfo();
         return ResponseEntity.ok(baseResponse);
     }
 
-    @PostMapping("/findAnyArea")
+    @GetMapping("/findAnyArea")
     public ResponseEntity<BaseResponse> findAnyArea(@RequestBody AreaInfoModel areaInfoModel){
         BaseResponse baseResponse = areaInfoService.findAnyInfo(areaInfoModel);
         return ResponseEntity.ok(baseResponse);

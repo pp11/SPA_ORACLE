@@ -4,6 +4,7 @@ import com.example.SPA_APPS.entity.DivisionInfo;
 import com.example.SPA_APPS.model.AreaInfoModel;
 import com.example.SPA_APPS.model.DivisionInfoModel;
 import jakarta.persistence.criteria.Predicate;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,20 +13,22 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
+@RequiredArgsConstructor
 public class AreaInfoRepository {
     private final JdbcTemplate jdbcTemplate;
 
 
-
-    @Autowired
-    public AreaInfoRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+//
+//    @Autowired
+//    public AreaInfoRepository(JdbcTemplate jdbcTemplate) {
+//        this.jdbcTemplate = jdbcTemplate;
+//    }
 
     public AreaInfoModel saveOrUpdateAreaInfo(AreaInfoModel areaInfoModel) {
         // Check if the record exists
@@ -98,12 +101,23 @@ public class AreaInfoRepository {
             areaInfoModel.setAreaCode(rs.getString("AREA_CODE"));
             areaInfoModel.setAreaName(rs.getString("AREA_NAME"));
             areaInfoModel.setStatus(rs.getString("STATUS"));
-//            areaInfoModel.setCreateBy(rs.getString("CREATE_BY"));
-//            areaInfoModel.setCreateTerminal(rs.getString("CREATE_TERMINAL"));
+            areaInfoModel.setCreateBy(rs.getString("CREATE_BY"));
+            areaInfoModel.setCreateTerminal(rs.getString("CREATE_TERMINAL"));
 //            areaInfoModel.setCreateDate(rs.getTimestamp("CREATE_DATE").toLocalDateTime());
-//            areaInfoModel.setUpdateBy(rs.getString("UPDATE_BY"));
-//            areaInfoModel.setUpdateTerminal(rs.getString("UPDATE_TERMINAL"));
+            areaInfoModel.setUpdateBy(rs.getString("UPDATE_BY"));
+            areaInfoModel.setUpdateTerminal(rs.getString("UPDATE_TERMINAL"));
 //            areaInfoModel.setUpdateDate(rs.getTimestamp("UPDATE_DATE").toLocalDateTime());
+
+            Timestamp createDateTimestamp = rs.getTimestamp("CREATE_DATE");
+            if (createDateTimestamp != null) {
+                areaInfoModel.setCreateDate(createDateTimestamp.toLocalDateTime());
+            }
+
+            Timestamp updateDateTimestamp = rs.getTimestamp("UPDATE_DATE");
+            if (updateDateTimestamp != null) {
+                areaInfoModel.setUpdateDate(updateDateTimestamp.toLocalDateTime());
+            }
+
             return areaInfoModel;
         }
     }

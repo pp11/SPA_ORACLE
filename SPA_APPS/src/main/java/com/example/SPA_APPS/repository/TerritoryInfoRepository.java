@@ -1,7 +1,7 @@
 package com.example.SPA_APPS.repository;
 
-import com.example.SPA_APPS.model.AreaInfoModel;
 import com.example.SPA_APPS.model.RegionInfoModel;
+import com.example.SPA_APPS.model.TerritoryInfoModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -15,49 +15,43 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class RegionInfoRepository {
+public class TerritoryInfoRepository {
     private final JdbcTemplate jdbcTemplate;
+    public TerritoryInfoModel saveOrUpdate(TerritoryInfoModel territoryInfoModel) {
 
-//    public RegionInfoRepository(JdbcTemplate jdbcTemplate) {
-//        this.jdbcTemplate = jdbcTemplate;
-//    }
-
-    public RegionInfoModel saveOrUpdate(RegionInfoModel regionInfoModel) {
-
-        String existsSql = "SELECT COUNT(*) FROM REGION_INFO WHERE ID = ?";
-        Integer count = jdbcTemplate.queryForObject(existsSql, new Object[]{regionInfoModel.getId()}, Integer.class);
+        String existsSql = "SELECT COUNT(*) FROM TERRITORY_INFO WHERE ID = ?";
+        Integer count = jdbcTemplate.queryForObject(existsSql, new Object[]{territoryInfoModel.getId()}, Integer.class);
 
         if (count != null && count > 0) {
             // If the record exists, update it
-            String updateSql = "UPDATE REGION_INFO SET  REGION_NAME = ?, STATUS = ?, UPDATE_BY = ?, UPDATE_TERMINAL = ?, UPDATE_DATE = ? WHERE ID = ?";
+            String updateSql = "UPDATE TERRITORY_INFO SET  TERRITORY_NAME = ?, STATUS = ?, UPDATE_BY = ?, UPDATE_TERMINAL = ?, UPDATE_DATE = ? WHERE ID = ?";
             jdbcTemplate.update(updateSql,
-                    regionInfoModel.getRegionName(),
-                    regionInfoModel.getStatus(),
-                    regionInfoModel.getUpdateBy(),
-                    regionInfoModel.getUpdateTerminal(),
-                    regionInfoModel.getUpdateDate(),
-                    regionInfoModel.getId());
+                    territoryInfoModel.getTerritoryName(),
+                    territoryInfoModel.getStatus(),
+                    territoryInfoModel.getUpdateBy(),
+                    territoryInfoModel.getUpdateTerminal(),
+                    territoryInfoModel.getUpdateDate(),
+                    territoryInfoModel.getId());
         } else {
-            String insertSql = "INSERT INTO REGION_INFO (ID, REGION_CODE, REGION_NAME, STATUS, CREATE_BY, CREATE_TERMINAL, CREATE_DATE, UPDATE_BY, UPDATE_TERMINAL, UPDATE_DATE) " +
-                    "VALUES (REGION_INFO_SEQ.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String insertSql = "INSERT INTO TERRITORY_INFO (ID, TERRITORY_CODE, TERRITORY_NAME, STATUS, CREATE_BY, CREATE_TERMINAL, CREATE_DATE, UPDATE_BY, UPDATE_TERMINAL, UPDATE_DATE) " +
+                    "VALUES (TERRITORY_INFO_SEQ.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             jdbcTemplate.update(insertSql,
-                    generateNextRegionCode(),
-                    regionInfoModel.getRegionName(),
-                    regionInfoModel.getStatus(),
-                    regionInfoModel.getCreateBy(),
-                    regionInfoModel.getCreateTerminal(),
-                    regionInfoModel.getCreateDate(),
-                    regionInfoModel.getUpdateBy(),
-                    regionInfoModel.getUpdateTerminal(),
-                    regionInfoModel.getUpdateDate());
+                    generateNextTerrCode(),
+                    territoryInfoModel.getTerritoryName(),
+                    territoryInfoModel.getStatus(),
+                    territoryInfoModel.getCreateBy(),
+                    territoryInfoModel.getCreateTerminal(),
+                    territoryInfoModel.getCreateDate(),
+                    territoryInfoModel.getUpdateBy(),
+                    territoryInfoModel.getUpdateTerminal(),
+                    territoryInfoModel.getUpdateDate());
         }
-
-        return regionInfoModel;
+        return territoryInfoModel;
     }
 
-    public String generateNextRegionCode() {
+    public String generateNextTerrCode() {
 
-        String sql = "SELECT MAX(REGION_CODE) FROM REGION_INFO WHERE REGION_CODE LIKE 'R%'";
+        String sql = "SELECT MAX(TERRITORY_CODE) FROM TERRITORY_INFO WHERE TERRITORY_CODE LIKE 'T%'";
         String lastCode = jdbcTemplate.queryForObject(sql, String.class);
         int nextCodeNumber = 1;
         if (lastCode != null && lastCode.length() > 1) {
@@ -66,31 +60,31 @@ public class RegionInfoRepository {
                 int lastCodeNumber = Integer.parseInt(numericPart);
                 nextCodeNumber = lastCodeNumber + 1;
             } catch (NumberFormatException e) {
-                throw new IllegalStateException("Invalid format for REGION_CODE in database: " + lastCode);
+                throw new IllegalStateException("Invalid format for TERRITORY_CODE in database: " + lastCode);
             }
         }
-        return String.format("R%02d", nextCodeNumber);
+        return String.format("T%02d", nextCodeNumber);
     }
 
-    public List<RegionInfoModel> findAll() {
-        String sql = "SELECT * FROM REGION_INFO";
-        return jdbcTemplate.query(sql, new RegionInfoRepository.RegionInfoRowMapper());
+    public List<TerritoryInfoModel> findAll() {
+        String sql = "SELECT * FROM TERRITORY_INFO";
+        return jdbcTemplate.query(sql, new TerritoryInfoRepository.TerritoryInfoRowMapper());
     }
 
-    private static class RegionInfoRowMapper implements RowMapper<RegionInfoModel> {
+    private static class TerritoryInfoRowMapper implements RowMapper<TerritoryInfoModel> {
         @Override
-        public RegionInfoModel mapRow(ResultSet rs, int rowNum) throws SQLException {
-            RegionInfoModel model = new RegionInfoModel();
+        public TerritoryInfoModel mapRow(ResultSet rs, int rowNum) throws SQLException {
+            TerritoryInfoModel model = new TerritoryInfoModel();
             model.setId(rs.getLong("ID"));
-            model.setRegionCode(rs.getString("REGION_CODE"));
-            model.setRegionName(rs.getString("REGION_NAME"));
+            model.setTerritoryCode(rs.getString("TERRITORY_CODE"));
+            model.setTerritoryName(rs.getString("TERRITORY_NAME"));
             model.setStatus(rs.getString("STATUS"));
             model.setCreateBy(rs.getString("CREATE_BY"));
             model.setCreateTerminal(rs.getString("CREATE_TERMINAL"));
-//            areaInfoModel.setCreateDate(rs.getTimestamp("CREATE_DATE").toLocalDateTime());
+//            model.setUpdateDate(rs.getTimestamp("CREATE_DATE").toLocalDateTime());
             model.setUpdateBy(rs.getString("UPDATE_BY"));
             model.setUpdateTerminal(rs.getString("UPDATE_TERMINAL"));
-//            areaInfoModel.setUpdateDate(rs.getTimestamp("UPDATE_DATE").toLocalDateTime());
+//            model.setUpdateDate(rs.getTimestamp("UPDATE_DATE").toLocalDateTime());
 
             Timestamp createDateTimestamp = rs.getTimestamp("CREATE_DATE");
             if (createDateTimestamp != null) {
@@ -105,9 +99,9 @@ public class RegionInfoRepository {
         }
     }
 
-    public List<RegionInfoModel> findByAnyData(RegionInfoModel criteria) {
+    public List<TerritoryInfoModel> findByAnyData(TerritoryInfoModel criteria) {
         // Base SQL query
-        StringBuilder sql = new StringBuilder("SELECT * FROM REGION_INFO WHERE 1=1");
+        StringBuilder sql = new StringBuilder("SELECT * FROM TERRITORY_INFO WHERE 1=1");
 
         // List to hold parameter values
         List<Object> params = new ArrayList<>();
@@ -117,13 +111,13 @@ public class RegionInfoRepository {
             sql.append(" AND ID = ?");
             params.add(criteria.getId());
         }
-        if (criteria.getRegionCode() != null) {
-            sql.append(" AND REGION_CODE = ?");
-            params.add(criteria.getRegionCode());
+        if (criteria.getTerritoryCode() != null) {
+            sql.append(" AND TERRITORY_CODE = ?");
+            params.add(criteria.getTerritoryCode());
         }
-        if (criteria.getRegionName() != null) {
-            sql.append(" AND REGION_NAME LIKE ?");
-            params.add("%" + criteria.getRegionName() + "%");
+        if (criteria.getTerritoryName() != null) {
+            sql.append(" AND TERRITORY_NAME LIKE ?");
+            params.add("%" + criteria.getTerritoryName() + "%");
         }
         if (criteria.getStatus() != null) {
             sql.append(" AND STATUS = ?");
@@ -155,7 +149,8 @@ public class RegionInfoRepository {
         }
 
         // Execute the query with the constructed SQL and parameters
-        return jdbcTemplate.query(sql.toString(), params.toArray(), new RegionInfoRepository.RegionInfoRowMapper());
+        return jdbcTemplate.query(sql.toString(), params.toArray(), new TerritoryInfoRepository.TerritoryInfoRowMapper());
     }
+
 
 }
