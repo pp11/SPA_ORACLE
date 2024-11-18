@@ -2,12 +2,13 @@ package com.example.SPA_APPS;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 
 @SpringBootApplication
-public class SpaAppsApplication {
+public class SpaAppsApplication{
 
 	public static void main(String[] args) {
 

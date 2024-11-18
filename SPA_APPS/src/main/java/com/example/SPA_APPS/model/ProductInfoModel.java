@@ -14,9 +14,13 @@ public class ProductInfoModel {
     private String productNameBengali;
     private String packSize;
     private String groupCode;
+    private String groupName;
     private String brandCode;
+    private  String brandName;
     private String categoryCode;
+    private  String categoryName;
     private String baseProductCode;
+    private  String baseProductName;
     private Integer shipperQty;
     private String cpFlag;
     private Integer prodUnitSlno;

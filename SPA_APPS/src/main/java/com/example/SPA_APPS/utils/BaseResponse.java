@@ -29,6 +29,9 @@ public class BaseResponse {
 
     private List<BrandInfoModel> brandInfoModelList;
 
+    private List<BaseProductModel> baseProductModelList;
+
+
 
 
 }
