@@ -34,6 +34,9 @@ public class BaseResponse {
     private ProductPriceInfoDto productPriceInfoDto;
     private List<ProductPriceInfoModel> productPriceInfoModelList;
 
+    private MarketSegmentDto marketSegmentDto;
+    private List<MarketSegmentModel> marketSegmentModelList;
+
     private List<RegionInfoModel> regionInfoModelList;
 
     private PriorityProdMstModel priorityProdMstModel;

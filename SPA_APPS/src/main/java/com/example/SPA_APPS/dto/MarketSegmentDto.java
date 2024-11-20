@@ -1,11 +1,11 @@
-package com.example.SPA_APPS.model;
+package com.example.SPA_APPS.dto;
 
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class MarketSegmentModel {
+public class MarketSegmentDto {
     private String marketSegmentCode;
     private String marketSegmentName;
     private String status;
