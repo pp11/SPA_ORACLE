@@ -1,12 +1,11 @@
-package com.example.SPA_APPS.model;
+package com.example.SPA_APPS.dto;
 
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class ProductInfoModel {
-
+public class ProductInfoDto {
     private Long id;
     private String productCode;
     private String productName;
@@ -32,5 +31,4 @@ public class ProductInfoModel {
     private String updateTerminal;
     private LocalDateTime createDate;
     private LocalDateTime updateDate;
-
 }

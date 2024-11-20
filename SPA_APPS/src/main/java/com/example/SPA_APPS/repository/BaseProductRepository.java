@@ -36,8 +36,10 @@ public class BaseProductRepository {
         } else {
             String insertSql = "INSERT INTO BASE_PRODUCT_INFO (BASE_PRODUCT_CODE, BASE_PRODUCT_NAME,  STATUS, CREATE_BY, CREATE_TERMINAL, CREATE_DATE, UPDATE_BY, UPDATE_TERMINAL, UPDATE_DATE) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String generatedCode = generateCode();
+            baseProductModel.setBaseProductCode(generatedCode);
             jdbcTemplate.update(insertSql,
-                    generateCode(),
+                    generatedCode,
                     baseProductModel.getBaseProductName(),
                     baseProductModel.getStatus(),
                     baseProductModel.getCreateBy(),

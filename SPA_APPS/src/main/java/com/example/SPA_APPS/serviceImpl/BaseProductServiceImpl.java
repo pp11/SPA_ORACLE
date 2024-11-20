@@ -1,12 +1,14 @@
 package com.example.SPA_APPS.serviceImpl;
 
+
+import com.example.SPA_APPS.dto.BaseProductInfoDto;
 import com.example.SPA_APPS.model.BaseProductModel;
-import com.example.SPA_APPS.model.BrandInfoModel;
 import com.example.SPA_APPS.repository.BaseProductRepository;
 import com.example.SPA_APPS.service.BaseProductService;
 import com.example.SPA_APPS.utils.BaseResponse;
 import com.example.SPA_APPS.utils.IpAddressUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -17,6 +19,12 @@ import java.util.List;
 public class BaseProductServiceImpl implements BaseProductService {
     private final BaseProductRepository baseProductRepository;
 
+    private BaseProductInfoDto entityToDto(BaseProductModel baseProductModel) {
+        BaseProductInfoDto baseProductInfoDto = new BaseProductInfoDto();
+        BeanUtils.copyProperties(baseProductModel, baseProductInfoDto);
+        return baseProductInfoDto;
+    }
+
     @Override
     public BaseResponse saveBaseProduct(BaseProductModel baseProductModel) {
         BaseResponse baseResponse=new BaseResponse();
@@ -24,6 +32,11 @@ public class BaseProductServiceImpl implements BaseProductService {
             baseProductModel.setCreateDate(LocalDateTime.now());
             baseProductModel.setCreateTerminal(IpAddressUtils.getLocalIpAddress());
             BaseProductModel savedModel = baseProductRepository.saveOrUpdate(baseProductModel);
+
+            BaseProductInfoDto savedDto = new BaseProductInfoDto();
+            savedDto=entityToDto(savedModel);
+            baseResponse.setBaseProductInfoDto(savedDto);
+
             baseResponse.setMessage("Data saved successfully");
             return  baseResponse;
         } catch (Exception e) {
@@ -39,6 +52,11 @@ public class BaseProductServiceImpl implements BaseProductService {
             baseProductModel.setUpdateDate(LocalDateTime.now());
             baseProductModel.setUpdateTerminal(IpAddressUtils.getLocalIpAddress());
             BaseProductModel savedModel = baseProductRepository.saveOrUpdate(baseProductModel);
+
+            BaseProductInfoDto savedDto = new BaseProductInfoDto();
+            savedDto=entityToDto(savedModel);
+            baseResponse.setBaseProductInfoDto(savedDto);
+
             baseResponse.setMessage("Data updated successfully");
             return  baseResponse;
         } catch (Exception e) {

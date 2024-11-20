@@ -14,15 +14,15 @@ public class SpaAppsApplication{
 
         SpringApplication.run(SpaAppsApplication.class, args);
         System.out.println("the application is running");
-        String url = "jdbc:oracle:thin:@localhost:1521:orcl";
-        String user = "sales";
-        String password = "sales";
-
-        try (Connection conn = DriverManager.getConnection(url, user, password)) {
-            System.out.println("Connected to Oracle database!");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        String url = "jdbc:oracle:thin:@localhost:1521:orcl";
+//        String user = "sales";
+//        String password = "sales";
+//
+//        try (Connection conn = DriverManager.getConnection(url, user, password)) {
+//            System.out.println("Connected to Oracle database!");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
 	}
 

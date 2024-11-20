@@ -1,7 +1,6 @@
 package com.example.SPA_APPS.utils;
 
-import com.example.SPA_APPS.dto.AreaInfoDto;
-import com.example.SPA_APPS.dto.DivisionInfoDto;
+import com.example.SPA_APPS.dto.*;
 import com.example.SPA_APPS.model.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
@@ -13,11 +12,27 @@ import java.util.List;
 public class BaseResponse {
     private DivisionInfoDto divisionInfoDto;
     private List<DivisionInfoDto> divisionInfoDtos;
+
+
     private String message;
 
+    private AreaInfoDto areaInfoDto;
     private List<AreaInfoModel> areaInfoModelList;
 
-    private  List<AreaInfoDto> areaInfoDtos;
+    private BrandInfoDto brandInfoDto;
+    private List<BrandInfoModel> brandInfoModelList;
+
+    private BaseProductInfoDto baseProductInfoDto;
+    private List<BaseProductModel> baseProductModelList;
+
+    private CategoryInfoDto categoryInfoDto;
+    private List<CategoryInfoModel> categoryInfoModelList;
+
+    private ProductInfoDto productInfoDto;
+    private List<ProductInfoModel> productInfoModelList;
+
+    private ProductPriceInfoDto productPriceInfoDto;
+    private List<ProductPriceInfoModel> productPriceInfoModelList;
 
     private List<RegionInfoModel> regionInfoModelList;
 
@@ -25,11 +40,11 @@ public class BaseResponse {
 
     private List<TerritoryInfoModel> territoryInfoModelList;
 
-    private List<ProductInfoModel> productInfoModelList;
 
-    private List<BrandInfoModel> brandInfoModelList;
 
-    private List<BaseProductModel> baseProductModelList;
+
+
+
 
 
 

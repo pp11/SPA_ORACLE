@@ -39,8 +39,10 @@ public class BrandRepository {
         } else {
             String insertSql = "INSERT INTO BRAND_INFO (BRAND_CODE, BRAND_NAME, BRAND_TYPE, STATUS, CREATE_BY, CREATE_TERMINAL, CREATE_DATE, UPDATE_BY, UPDATE_TERMINAL, UPDATE_DATE) " +
                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String generatedCode = generateCode();
+            brandInfoModel.setBrandCode(generatedCode);
             jdbcTemplate.update(insertSql,
-                    generateCode(),
+                    generatedCode,
                     brandInfoModel.getBrandName(),
                     brandInfoModel.getBrandType(),
                     brandInfoModel.getStatus(),

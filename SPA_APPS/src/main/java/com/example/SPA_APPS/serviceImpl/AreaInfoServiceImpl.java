@@ -1,22 +1,19 @@
 package com.example.SPA_APPS.serviceImpl;
 
 import com.example.SPA_APPS.dto.AreaInfoDto;
-import com.example.SPA_APPS.dto.DivisionInfoDto;
-import com.example.SPA_APPS.entity.DivisionInfo;
+
 import com.example.SPA_APPS.model.AreaInfoModel;
-import com.example.SPA_APPS.model.DivisionInfoModel;
+
 import com.example.SPA_APPS.repository.AreaInfoRepository;
 import com.example.SPA_APPS.service.AreaInfoService;
 import com.example.SPA_APPS.utils.BaseResponse;
 import com.example.SPA_APPS.utils.IpAddressUtils;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.servlet.http.HttpServletRequest;
+
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -32,16 +29,25 @@ public class AreaInfoServiceImpl implements AreaInfoService {
     @Autowired
     private AreaInfoRepository areaInfoRepository;
     private static AtomicInteger counter = new AtomicInteger(1);
+
+    private AreaInfoDto entityToDto(AreaInfoModel areaInfoModel) {
+        AreaInfoDto areaInfoDto = new AreaInfoDto();
+        BeanUtils.copyProperties(areaInfoModel, areaInfoDto);
+        return areaInfoDto;
+    }
+
     @Override
     public BaseResponse saveAreaInfo(AreaInfoModel areaInfoModel) {
-
         BaseResponse baseResponse=new BaseResponse();
-
-
         try {
             areaInfoModel.setCreateDate(LocalDateTime.now());
             areaInfoModel.setCreateTerminal(IpAddressUtils.getLocalIpAddress());
+
             AreaInfoModel savedModel = areaInfoRepository.saveOrUpdateAreaInfo(areaInfoModel);
+            AreaInfoDto savedDto = new AreaInfoDto();
+            savedDto=entityToDto(savedModel);
+
+            baseResponse.setAreaInfoDto(savedDto);
             baseResponse.setMessage("Data saved successfully");
             return  baseResponse;
         } catch (Exception e) {
@@ -58,6 +64,9 @@ public class AreaInfoServiceImpl implements AreaInfoService {
                 areaInfoModel.setUpdateDate(LocalDateTime.now());
                 areaInfoModel.setUpdateTerminal(IpAddressUtils.getLocalIpAddress());
                 areaInfoRepository.saveOrUpdateAreaInfo(areaInfoModel);
+                AreaInfoDto savedDto = new AreaInfoDto();
+                savedDto=entityToDto(areaInfoModel);
+                baseResponse.setAreaInfoDto(savedDto);
                 baseResponse.setMessage("Data updated successfully.");
 
         } catch (Exception e) {
@@ -71,7 +80,6 @@ public class AreaInfoServiceImpl implements AreaInfoService {
     public BaseResponse findAllAreaInfo() {
         List<AreaInfoModel> areaInfoList = areaInfoRepository.findAll();
         BaseResponse baseResponse=new BaseResponse();
-
         baseResponse.setAreaInfoModelList(areaInfoList);
         baseResponse.setMessage("success");
         return baseResponse;

@@ -48,10 +48,14 @@ public class AreaInfoRepository {
                     areaInfoModel.getId());
         } else {
             // If the record doesn't exist, insert it with a new ID from the sequence
+
+
             String insertSql = "INSERT INTO AREA_INFO (ID, AREA_CODE, AREA_NAME, STATUS, CREATE_BY, CREATE_TERMINAL, CREATE_DATE, UPDATE_BY, UPDATE_TERMINAL, UPDATE_DATE) " +
                     "VALUES (AREA_INFO_SEQ.NEXTVAL, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String generatedCode = generateNextAreaCode();
+            areaInfoModel.setAreaCode(generatedCode);
             jdbcTemplate.update(insertSql,
-                    generateNextAreaCode(),
+                    generatedCode,
                     areaInfoModel.getAreaName(),
                     areaInfoModel.getStatus(),
                     areaInfoModel.getCreateBy(),

@@ -74,12 +74,19 @@ public class ProductInfoRepository {
                     productInfoModel.getUpdateBy(),
                     productInfoModel.getUpdateDate(),
                     productInfoModel.getUpdateTerminal());
+
+            // Retrieve the generated ID
+            String getGeneratedIdSql = "SELECT PRODUCT_INFO_SEQ.currval FROM DUAL";
+            Long generatedId = jdbcTemplate.queryForObject(getGeneratedIdSql, Long.class);
+
+            // Set the generated ID in the model
+            productInfoModel.setId(generatedId);
         }
         return productInfoModel;
     }
 
     public List<ProductInfoModel> findAll() {
-        String sql = "SELECT * FROM PRODUCT_INFO";
+        String sql = "SELECT * FROM VW_PRODUCT_INFO";
         return jdbcTemplate.query(sql, new ProductInfoRepository.ProductInfoRowMapper());
     }
 
@@ -93,8 +100,13 @@ public class ProductInfoRepository {
             model.setPackSize(rs.getString("PACK_SIZE"));
             model.setPackSizeGram(rs.getString("PACK_SIZE_GRAM"));
             model.setGroupCode(rs.getString("GROUP_CODE"));
+            model.setGroupName(rs.getString("GROUP_NAME"));
             model.setBrandCode(rs.getString("BRAND_CODE"));
+            model.setBrandName(rs.getString("BRAND_NAME"));
             model.setBaseProductCode(rs.getString("BASE_PRODUCT_CODE"));
+            model.setBaseProductName(rs.getString("BASE_PRODUCT_NAME"));
+            model.setCategoryCode(rs.getString("CATEGORY_CODE"));
+            model.setCategoryName(rs.getString("CATEGORY_NAME"));
             model.setShipperQty(rs.getInt("SHIPPER_QTY"));
             model.setStatus(rs.getString("STATUS"));
             model.setVersionNo(rs.getInt("PRODUCT_VERSION"));
@@ -119,7 +131,7 @@ public class ProductInfoRepository {
 
     public List<ProductInfoModel> findByAnyData(ProductInfoModel criteria) {
         // Base SQL query
-        StringBuilder sql = new StringBuilder("SELECT * FROM PRODUCT_INFO WHERE 1=1");
+        StringBuilder sql = new StringBuilder("SELECT * FROM VW_PRODUCT_INFO WHERE 1=1");
 
         // List to hold parameter values
         List<Object> params = new ArrayList<>();
@@ -146,8 +158,12 @@ public class ProductInfoRepository {
             params.add(criteria.getPackSize());
         }
         if (criteria.getBrandCode() != null) {
-            sql.append(" AND BRAND_CODE = ?");
+            sql.append(" AND BRAND_CODE  = ?");
             params.add(criteria.getBrandCode());
+        }
+        if (criteria.getBrandName() != null) {
+            sql.append(" AND BRAND_NAME = ?");
+            params.add(criteria.getBrandName());
         }
         if (criteria.getGroupCode() != null) {
             sql.append(" AND GROUP_CODE = ?");
@@ -157,9 +173,18 @@ public class ProductInfoRepository {
             sql.append(" AND CATEGORY_CODE = ?");
             params.add(criteria.getCategoryCode());
         }
+        if (criteria.getCategoryName() != null) {
+            sql.append(" AND CATEGORY_NAME = ?");
+            params.add(criteria.getCategoryName());
+        }
         if (criteria.getBaseProductCode() != null) {
             sql.append(" AND BASE_PRODUCT_CODE = ?");
             params.add(criteria.getBaseProductCode());
+        }
+
+        if (criteria.getBaseProductName() != null) {
+            sql.append(" AND BASE_PRODUCT_NAME = ?");
+            params.add(criteria.getBaseProductName());
         }
 
 
