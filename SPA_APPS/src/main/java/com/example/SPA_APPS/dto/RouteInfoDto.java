@@ -1,14 +1,16 @@
-package com.example.SPA_APPS.model;
+package com.example.SPA_APPS.dto;
 
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class DivisionInfoModel {
-    private Long id;
-    private String divisionCode;
-    private String divisionName;
+public class RouteInfoDto {
+    private String routeCode;
+    private String routeName;
+    private String routeDescription;
+    private String marketAddress;
+    private String remarks;
     private String status;
     private String createBy;
     private String createTerminal;

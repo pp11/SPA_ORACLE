@@ -64,6 +64,10 @@ public class AreaInfoRepository {
                     areaInfoModel.getUpdateBy(),
                     areaInfoModel.getUpdateTerminal(),
                     areaInfoModel.getUpdateDate());
+            String getGeneratedIdSql = "SELECT AREA_INFO_SEQ.currval FROM DUAL";
+            Long generatedId = jdbcTemplate.queryForObject(getGeneratedIdSql, Long.class);
+
+            areaInfoModel.setId(generatedId);
         }
 
         return areaInfoModel;

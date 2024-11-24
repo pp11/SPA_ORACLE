@@ -13,7 +13,6 @@ public class BaseResponse {
     private DivisionInfoDto divisionInfoDto;
     private List<DivisionInfoDto> divisionInfoDtos;
 
-
     private String message;
 
     private AreaInfoDto areaInfoDto;
@@ -36,6 +35,12 @@ public class BaseResponse {
 
     private MarketSegmentDto marketSegmentDto;
     private List<MarketSegmentModel> marketSegmentModelList;
+
+    private MarketInfoDto marketInfoDto;
+    private List<MarketInfoModel> marketInfoModelList;
+
+    private RouteInfoDto routeInfoDto;
+    private  List<RouteInfoModel> routeInfoModelList;
 
     private List<RegionInfoModel> regionInfoModelList;
 
