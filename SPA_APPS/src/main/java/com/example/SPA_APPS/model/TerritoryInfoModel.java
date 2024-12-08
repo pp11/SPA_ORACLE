@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 public class TerritoryInfoModel {
     private Long id;
 
-    private String TerritoryCode;
-    private String TerritoryName;
+    private String territoryCode;
+    private String territoryName;
     private String status;
     private String createBy;
     private String createTerminal;
